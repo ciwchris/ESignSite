@@ -1,0 +1,23 @@
+.completed-list-container {
+    margin-top: 40px;
+}
+
+.badge {
+    margin-left: 10px;
+}
+
+.well {
+    display: inline-block;
+    font-size: large;
+    font-weight: bold;
+}
+
+.well span {
+    font-size: xx-large;
+}
+
+.progress {
+    margin-left: auto;
+    margin-right: auto;
+    width: 40%;
+}
