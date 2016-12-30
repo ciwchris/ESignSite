@@ -35,8 +35,10 @@ export class AppComponent {
     }
 
     lookUp() {
-        this.submitted = true;
         this.completedDocuments = new CompletedDocuments([], 0);
+        this.hasError = false;
+        this.hasResult = false;
+        this.submitted = true;
 
         this.completedDocumentsService
             .getCompletedDocuments(this.query)
@@ -45,7 +47,10 @@ export class AppComponent {
                 this.submitted = false;
                 this.hasResult = true;
             })
-            .catch(error => { this.hasError = true; });
+            .catch(error => {
+                this.hasError = true;
+                this.submitted = false;
+            });
     }
 
     formatEndDate(form) {
