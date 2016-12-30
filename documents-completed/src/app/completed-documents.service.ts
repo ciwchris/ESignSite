@@ -14,6 +14,10 @@ export class CompletedDocumentsService {
 
     constructor(private http: Http) { }
 
+    getMockCompletedDocuments(): Promise<CompletedDocuments> {
+        return Promise.resolve(COMPLETEDDOCUMENTS);
+    }
+
     getCompletedDocuments(query: Query): Promise<CompletedDocuments> {
         const headers = new Headers({ 'Content-Type': 'application/json' });
         const options = new RequestOptions({ headers: headers });
