@@ -3,7 +3,7 @@ import { NG_VALIDATORS, Validator, Validators, ValidatorFn, AbstractControl } fr
 
 @Directive({
     selector: '[appMax]',
-    providers: [{provide: NG_VALIDATORS, useExisting: MaxDirective, multi: true}]
+    providers: [{ provide: NG_VALIDATORS, useExisting: MaxDirective, multi: true }]
 })
 export class MaxDirective implements Validator, OnChanges {
     @Input('appMax') max: number;
@@ -18,16 +18,16 @@ export class MaxDirective implements Validator, OnChanges {
         }
     }
 
-    validate(control: AbstractControl): {[key: string]: any} {
+    validate(control: AbstractControl): { [key: string]: any } {
         return this.valFn(control);
     }
 }
 
 export function maxValidator(max): ValidatorFn {
-    return (control: AbstractControl): {[key: string]: any} => {
+    return (control: AbstractControl): { [key: string]: any } => {
         const value = control.value;
-        return isNaN(max) || isNaN(value) || value > max
-            ? {'appMax': {value}}
-            : null;
+        return /^\d+$/.test(max) && /^\d+$/.test(value) && value <= max
+            ? null
+            : { 'appMax': { value } };
     };
 }

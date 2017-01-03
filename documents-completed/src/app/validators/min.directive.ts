@@ -3,7 +3,7 @@ import { NG_VALIDATORS, Validator, Validators, ValidatorFn, AbstractControl } fr
 
 @Directive({
     selector: '[appMin]',
-    providers: [{provide: NG_VALIDATORS, useExisting: MinDirective, multi: true}]
+    providers: [{ provide: NG_VALIDATORS, useExisting: MinDirective, multi: true }]
 })
 export class MinDirective implements Validator, OnChanges {
     @Input('appMin') min: number;
@@ -18,17 +18,17 @@ export class MinDirective implements Validator, OnChanges {
         }
     }
 
-    validate(control: AbstractControl): {[key: string]: any} {
+    validate(control: AbstractControl): { [key: string]: any } {
         return this.valFn(control);
     }
 }
 
 export function minValidator(min): ValidatorFn {
-    return (control: AbstractControl): {[key: string]: any} => {
+    return (control: AbstractControl): { [key: string]: any } => {
         const value = control.value;
-        console.log(value + ' ' + min);
-        return isNaN(min) || isNaN(value) || value < min
-            ? {'appMin': {value}}
-            : null;
+
+        return /^\d+$/.test(min) && /^\d+$/.test(value) && value >= min
+            ? null
+            : { 'appMin': { value } };
     };
 }

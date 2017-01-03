@@ -3,7 +3,7 @@ import { NG_VALIDATORS, Validator, Validators, ValidatorFn, AbstractControl } fr
 
 @Directive({
     selector: '[appMaxDate]',
-    providers: [{provide: NG_VALIDATORS, useExisting: MaxDateDirective, multi: true}]
+    providers: [{ provide: NG_VALIDATORS, useExisting: MaxDateDirective, multi: true }]
 })
 export class MaxDateDirective implements Validator, OnChanges {
     @Input('appMaxDate') maxDate: string;
@@ -18,19 +18,19 @@ export class MaxDateDirective implements Validator, OnChanges {
         }
     }
 
-    validate(control: AbstractControl): {[key: string]: any} {
+    validate(control: AbstractControl): { [key: string]: any } {
         return this.valFn(control);
     }
 }
 
 export function maxDateValidator(maxDate): ValidatorFn {
-    return (control: AbstractControl): {[key: string]: any} => {
-        const controlDate = control.value === null
+    return (control: AbstractControl): { [key: string]: any } => {
+        const controlDate = control.value === null || control.value === undefined
             ? null
             : Date.parse(control.value.replace(/\u200E/g, '')); // IE 0 width char string removal
 
         return isNaN(maxDate) || isNaN(controlDate) || controlDate > maxDate
-            ? {'appMaxDate': {controlDate}}
+            ? { 'appMaxDate': { controlDate } }
             : null;
     };
 }

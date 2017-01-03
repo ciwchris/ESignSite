@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { Query } from './query';
 import { CompletedDocumentsService } from './completed-documents.service';
 import { CompletedDocuments } from './completed-documents';
-import {AccordionModule} from 'ng2-accordion';
+import { AccordionModule } from 'ng2-accordion';
 
 @Component({
     selector: 'app-root',

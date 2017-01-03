@@ -3,7 +3,7 @@ import { NG_VALIDATORS, Validator, Validators, ValidatorFn, AbstractControl } fr
 
 @Directive({
     selector: '[appMinDate]',
-    providers: [{provide: NG_VALIDATORS, useExisting: MinDateDirective, multi: true}]
+    providers: [{ provide: NG_VALIDATORS, useExisting: MinDateDirective, multi: true }]
 })
 
 export class MinDateDirective implements Validator, OnChanges {
@@ -19,19 +19,19 @@ export class MinDateDirective implements Validator, OnChanges {
         }
     }
 
-    validate(control: AbstractControl): {[key: string]: any} {
+    validate(control: AbstractControl): { [key: string]: any } {
         return this.valFn(control);
     }
 }
 
 export function minDateValidator(minDate): ValidatorFn {
-    return (control: AbstractControl): {[key: string]: any} => {
-        const controlDate = control.value === null
+    return (control: AbstractControl): { [key: string]: any } => {
+        const controlDate = control.value === null || control.value === undefined
             ? null
             : Date.parse(control.value.replace(/\u200E/g, '')); // IE 0 width char string removal
 
         return isNaN(minDate) || isNaN(controlDate) || controlDate < minDate
-            ? {'appMinDate': {controlDate}}
+            ? { 'appMinDate': { controlDate } }
             : null;
     };
 }
