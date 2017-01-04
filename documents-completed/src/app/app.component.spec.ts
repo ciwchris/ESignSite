@@ -26,7 +26,7 @@ class CompletedDocumentsServiceSpy {
 }
 */
 
-fdescribe('AppComponent', () => {
+describe('AppComponent', () => {
 
     beforeEach(async(() => {
         TestBed.configureTestingModule({

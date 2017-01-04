@@ -23,7 +23,6 @@ export class CompletedDocumentsService {
         const options = new RequestOptions({ headers: headers });
 
         query.startDate = query.startDate.replace(/\u200E/g, ''); // IE 0 width char string removal
-
         return this.http
             .post(this.url, query, options)
             .toPromise()
