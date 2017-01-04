@@ -1,6 +1,7 @@
 /* tslint:disable:no-unused-variable */
 
-import { TestBed, async } from '@angular/core/testing';
+import { TestBed, async, fakeAsync, tick } from '@angular/core/testing';
+import { HttpModule } from '@angular/http';
 import { AppComponent } from './app.component';
 
 import { FormsModule, NgForm } from '@angular/forms';
@@ -14,6 +15,7 @@ import { MaxDirective } from './validators/max.directive';
 import { MinDirective } from './validators/min.directive';
 import { AccordionModule } from 'ng2-accordion';
 
+/*
 class CompletedDocumentsServiceSpy {
     getCompletedDocuments = jasmine.createSpy('getCompletedDocuments').and.callFake(
         () => Promise
@@ -22,42 +24,64 @@ class CompletedDocumentsServiceSpy {
     );
 
 }
+*/
 
 fdescribe('AppComponent', () => {
 
     beforeEach(async(() => {
         TestBed.configureTestingModule({
-            imports: [AccordionModule, FormsModule],
+            imports: [AccordionModule, FormsModule, HttpModule],
             declarations: [AppComponent, MaxDateDirective, MinDateDirective, MinDirective, MaxDirective]
         });
+        /*
         TestBed.overrideComponent(AppComponent, {
             set: {
                 providers: [
                     { provide: CompletedDocumentsService, useClass: CompletedDocumentsServiceSpy }
                 ]
             }
-        })
-
-            .compileComponents();
+        }).compileComponents();
+            */
         TestBed.compileComponents();
     }));
 
-    fit('should create the app', async(() => {
+    it('should create the app', async(() => {
         let fixture = TestBed.createComponent(AppComponent);
         let app = fixture.debugElement.componentInstance;
         expect(app).toBeTruthy();
     }));
 
-    it(`should have as title 'app works!'`, async(() => {
+    it('lookUp fails', fakeAsync(() => {
         let fixture = TestBed.createComponent(AppComponent);
         let app = fixture.debugElement.componentInstance;
-        expect(app.title).toEqual('app works!');
+
+        spyOn(app.completedDocumentsService, 'getCompletedDocuments').and.callFake(
+            () => Promise.reject('error'));
+
+        app.lookUp();
+        tick();
+
+        expect(app.completedDocuments.count).toBe(0);
+        expect(app.submitted).toBeFalsy();
+        expect(app.hasError).toBeTruthy();
+        expect(app.hasResult).toBeFalsy();
     }));
 
-    it('should render title in a h1 tag', async(() => {
+    it('lookUp documents', fakeAsync(() => {
         let fixture = TestBed.createComponent(AppComponent);
-        fixture.detectChanges();
-        let compiled = fixture.debugElement.nativeElement;
-        expect(compiled.querySelector('h1').textContent).toContain('app works!');
+        let app = fixture.debugElement.componentInstance;
+
+        spyOn(app.completedDocumentsService, 'getCompletedDocuments').and.callFake(
+            () => Promise.resolve({ count: 1, documents: [{}] })
+        );
+
+        app.lookUp();
+        tick();
+
+        expect(app.completedDocuments.count).toBe(1);
+        expect(app.submitted).toBeFalsy();
+        expect(app.hasError).toBeFalsy();
+        expect(app.hasResult).toBeTruthy();
     }));
+
 });
