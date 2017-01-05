@@ -1,6 +1,12 @@
 import { Injectable } from '@angular/core';
-import { Headers, Http, RequestOptions } from '@angular/http';
+import { Headers, Http, RequestOptions, Response } from '@angular/http';
 
+import { Observable } from 'rxjs/Observable';
+import 'rxjs/add/observable/throw';
+
+import 'rxjs/add/operator/do';
+import 'rxjs/add/operator/catch';
+import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/toPromise';
 
 import { CompletedDocuments } from './completed-documents';
@@ -18,16 +24,24 @@ export class CompletedDocumentsService {
         return Promise.resolve(COMPLETEDDOCUMENTS);
     }
 
-    getCompletedDocuments(query: Query): Promise<CompletedDocuments> {
+    getCompletedDocuments(query: Query): Observable<CompletedDocuments> {
         const headers = new Headers({ 'Content-Type': 'application/json' });
         const options = new RequestOptions({ headers: headers });
 
         query.startDate = query.startDate.replace(/\u200E/g, ''); // IE 0 width char string removal
         return this.http
             .post(this.url, query, options)
-            .toPromise()
-            .then(response => response.json() as CompletedDocuments)
+            .map(this.extractData)
             .catch(this.handleError);
+    }
+
+    private extractData(response: Response) {
+        console.log('before: ' + response.status);
+        if (response.status < 200 || response.status >= 300) {
+            throw new Error('Bad response status: ' + response.status);
+        }
+        let body = response.json();
+        return body || {};
     }
 
     private handleError(error: any): Promise<any> {

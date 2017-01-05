@@ -42,6 +42,7 @@ export class AppComponent {
 
         this.completedDocumentsService
             .getCompletedDocuments(this.query)
+            .toPromise()
             .then(completedDocuments => {
                 this.completedDocuments = completedDocuments;
                 this.submitted = false;
